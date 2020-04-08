@@ -8,7 +8,7 @@ import CoursesPage from "./components/courses/CoursesPage";
 
 function App() {
   return (
-    <div className="container-fluid">
+    <div className="container">
       <Header />
       <Switch>
         <Route exact path="/" component={HomePage}></Route>
