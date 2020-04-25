@@ -5,50 +5,49 @@ import * as authorActions from "../../redux/actions/authorActions";
 import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import CourseList from "./CourseList";
+import { Redirect } from "react-router-dom";
+import Spinner from "../common/Spinner";
 
 class CoursePage extends Component {
-  // state = {
-  //   course: {
-  //     title: "",
-  //   },
-  // };
-
-  // handleChange = (event) => {
-  //   const course = { ...this.state.course, title: event.target.value };
-  //   this.setState({ course });
-  // };
-
-  // handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   this.props.actions.createCourse(this.state.course);
-  // };
+  state = {
+    redirectToAddCoursePage: false,
+  };
 
   componentDidMount() {
-    this.props.actions.loadCourses().catch((error) => {
-      alert("Loading courses failed " + error);
-    });
+    if (!this.props.courses.length) {
+      this.props.actions.loadCourses().catch((error) => {
+        alert("Loading courses failed " + error);
+      });
+    }
 
-    this.props.actions.loadAuthors().catch((error) => {
-      alert("Loading authors failed " + error);
-    });
+    if (!this.props.authors.length) {
+      this.props.actions.loadAuthors().catch((error) => {
+        alert("Loading authors failed " + error);
+      });
+    }
   }
 
   render() {
-    // const { handleChange, handleSubmit } = this;
-    // const { course } = this.state;
-
     return (
       <>
-        {/* <form onSubmit={handleSubmit}>
-          <h3>Add Course</h3>
-          <input type="text" onChange={handleChange} value={course.title} />
-          <input type="submit" value="Save" /> */}
+        {this.state.redirectToAddCoursePage && <Redirect to="/course" />}
         <h2>Courses</h2>
-        <CourseList courses={this.props.courses} />
-        {/* {this.props.courses.map((course) => (
-          <div key={course.title}>{course.title}</div>
-        ))} */}
-        {/* </form> */}
+        {this.props.loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <button
+              style={{ marginBottom: 20 }}
+              className="btn btn-primary add-course"
+              onClick={() => this.setState({ redirectToAddCoursePage: true })}
+            >
+              Add Course
+            </button>
+
+            <CourseList courses={this.props.courses} />
+          </>
+        )}
+        ;
       </>
     );
   }
@@ -58,6 +57,7 @@ CoursePage.propTypes = {
   courses: PropTypes.array.isRequired,
   authors: PropTypes.array.isRequired,
   actions: PropTypes.object.isRequired,
+  loading: PropTypes.bool.isRequired,
 };
 
 // Only use the part of the state this component need.
@@ -74,6 +74,7 @@ function mapStateToProps(state) {
           };
         }),
     authors: state.authors,
+    loading: state.apiCallsInProgress > 0,
   };
 }
 

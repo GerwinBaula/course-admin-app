@@ -53,6 +53,7 @@
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.1.2",
+    "react-toastify": "^5.5.0",
     "redux": "^4.0.5",
     "redux-immutable-state-invariant": "^2.1.0",
     "redux-thunk": "^2.3.0",
@@ -74,8 +75,8 @@
     "start:dev": "node scripts/start.js",
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
-    "prestart:api": "node tools/createMockDb.js",
-    "start:api": "node tools/apiServer.js"
+    "prestart:api": "node src/tools/createMockDb.js",
+    "start:api": "node src/tools/apiServer.js"
   },
   "eslintConfig": {
     "extends": "react-app"
